@@ -71,6 +71,7 @@ PODS:
     - PromiseKit/CorePromise
   - SkyFloatingLabelTextField (3.4.0)
   - Spring (1.0.5)
+  - SwiftyBeaver (1.5.1)
   - SwiftyJSON (4.0.0)
 
 DEPENDENCIES:
@@ -88,6 +89,7 @@ DEPENDENCIES:
   - PromiseKit
   - SkyFloatingLabelTextField (~> 3.0)
   - Spring
+  - SwiftyBeaver
   - SwiftyJSON
 
 EXTERNAL SOURCES:
@@ -122,8 +124,9 @@ SPEC CHECKSUMS:
   PromiseKit: 445dac9b2c3c3b4b31b5f842bc325700b848a8bd
   SkyFloatingLabelTextField: 703aa1420b697392b1e7dba25571180dde018477
   Spring: 17901566c8ecf3a1327902b940406c64512f9bb1
+  SwiftyBeaver: 4f74563624b2c1e821c522c54142b5dd5ebb0f30
   SwiftyJSON: 070dabdcb1beb81b247c65ffa3a79dbbfb3b48aa
 
-PODFILE CHECKSUM: f81c0e145dc990e390c6a17fab2ca671877c3fd8
+PODFILE CHECKSUM: bfe0899122e61b8a8d6dc782df9c37111045df45
 
 COCOAPODS: 1.4.0

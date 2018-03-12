@@ -18,7 +18,7 @@ class FirebaseAuthHelper {
                 withBlock(user)
             }
             else{
-                print(error.debugDescription)
+                beaverLog.error(error.debugDescription)
                 showAlert(title: "Log In Error", message: "Looks like that user doesnt exist or you entered a wrong password!", currentView: view)
             }
         })
@@ -28,7 +28,7 @@ class FirebaseAuthHelper {
         Auth.auth().createUser(withEmail: email, password: password, completion: { (user: User?, error) in
             if error == nil {
                 FirebaseDatabaseHelper.createNewUser(name: name, username: username, email: email, image: image, successBlock: {
-                    print("User created!")
+                    beaverLog.info("User created!")
                     withBlock(user!)
                 })
             }
@@ -47,7 +47,7 @@ class FirebaseAuthHelper {
                 try auth.signOut()
                 fulfill(true)
             } catch let signOutError as NSError {
-                print ("Error signing out: %@", signOutError)
+                beaverLog.error("Error signing out: \(signOutError.debugDescription)")
                 showAlert(title: "Error Logging Out", message: signOutError.debugDescription, currentView: view)
             }
         }
@@ -55,11 +55,11 @@ class FirebaseAuthHelper {
     
     static func isLoggedIn() -> Bool {
         if Auth.auth().currentUser != nil{
-            print("Logged in")
+            beaverLog.info("Logged in")
             return true
         }
         else {
-            print("Not Logged In")
+            beaverLog.info("Not Logged In")
             return false
         }
     }

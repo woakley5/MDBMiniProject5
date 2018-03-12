@@ -9,17 +9,22 @@
 import UIKit
 import Firebase
 import LyftSDK
+import SwiftyBeaver
+let beaverLog = SwiftyBeaver.self
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
         LyftConfiguration.developer = (token: "fLCBu1e/+yLZy0B+Sp3T4QOO4R8FS62rgfhoh6g8MiTyMCoz/XJY9hFyptZF3UNde0g0a/GKUjqpUwI+gCX1/fmvcvixuorKbVHbt76N9ILFjYsr1f0juDc=", clientId: "PMk8sLhkuEFT")
-
+        let console = ConsoleDestination()  // log to Xcode Console
+        let cloud = SBPlatformDestination(appID: "k6POnR", appSecret: "qoqunmg9kxk6l8lahs7xqenvplujziqw", encryptionKey: "d6pvazpvSEXufaekFxdhevz5yuscrbmy") // to cloud
+        console.format = "$DHH:mm:ss$d $L $M"
+        beaverLog.addDestination(console)
+        beaverLog.addDestination(cloud)
         return true
     }
 

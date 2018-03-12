@@ -40,7 +40,7 @@ class FirebaseDatabaseHelper {
                 let newPost = ["postId": key,"name": name, "pictureURL": downloadURL, "posterId": posterId!, "description": description, "date": dateString, "latitude": location.latitude, "longitude": location.longitude] as [String : Any]
                 let childUpdates = ["/\(key)/": newPost]
                 postsRef.updateChildValues(childUpdates)
-                print("Post created!")
+                beaverLog.info("Post created!")
                 fulfill(true)
             }
         }
@@ -48,9 +48,9 @@ class FirebaseDatabaseHelper {
     
     
     static func fetchPosts(withBlock: @escaping ([Post]) -> ()){
-        print("Called fetch posts")
+        beaverLog.info("Called fetch posts")
         postsRef.child("Posts").observe(.childAdded, with: { (snapshot) in
-            print("Fetch posts observer called")
+            beaverLog.info("Fetch posts observer called")
             let json = JSON(snapshot.value)
             if let result = json.dictionaryObject {
                 if let post = Post(JSON: result){
@@ -67,7 +67,7 @@ class FirebaseDatabaseHelper {
         MKFullSpinner.show("Uploading Profile Picture")
         imageRef.putData(data, metadata: nil) { (metadata, error) in
             guard let metadata = metadata else {
-                print(error)
+                beaverLog.warning(error.debugDescription)
                 MKFullSpinner.hide()
                 return
             }

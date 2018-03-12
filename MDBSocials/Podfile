@@ -23,6 +23,7 @@ target 'MDBSocials' do
   pod 'LyftSDK/API'
   pod 'LocationPicker'
   pod 'Spring'
+  pod 'SwiftyBeaver'
 
   
   target 'MDBSocialsTests' do
