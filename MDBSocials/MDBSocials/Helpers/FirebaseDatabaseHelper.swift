@@ -81,7 +81,7 @@ class FirebaseDatabaseHelper {
         }
     }
     
-    static func getUserWithId(id: String) -> Promise<UserModel> {
+    /*static func getUserWithId(id: String) -> Promise<UserModel> {
         return Promise { fulfill, error in
             let usersRef = Database.database().reference().child("User")
             usersRef.child(id).observeSingleEvent(of: .value, with: { (snapshot) in
@@ -93,7 +93,7 @@ class FirebaseDatabaseHelper {
                 }
             })
         }
-    }
+    }*/
     
     static func updateInterested(postId: String, userId: String) -> Promise<Bool> {
         return Promise { fulfill, _ in

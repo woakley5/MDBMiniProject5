@@ -32,4 +32,19 @@ class AlamofireClient {
             }
         }
     }
+    
+    static func getUserWithId(id: String) -> Promise<UserModel> {
+        return Promise { fulfill, error in
+            Alamofire.request("https://mdb-socials.herokuapp.com/user/\(id)").responseJSON { response in
+                if let response = response.result.value {
+                    let json = JSON(response)
+                    if let result = json.dictionaryObject {
+                        if let user = UserModel(JSON: result){
+                            fulfill(user)
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

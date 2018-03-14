@@ -79,7 +79,7 @@ extension MyEventsViewController: UITableViewDelegate, UITableViewDataSource {
         cell.titleLabel.text = post.eventName
         var u = ""
         if post.posterName == nil {
-            FirebaseDatabaseHelper.getUserWithId(id: post.posterId!).then { user in
+            AlamofireClient.getUserWithId(id: post.posterId!).then { user in
                 u = user.username! }.then {
                     DispatchQueue.main.async {
                         cell.posterNameLabel.text = "Created by: " + u
