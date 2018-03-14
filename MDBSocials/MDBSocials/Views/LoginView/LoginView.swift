@@ -81,11 +81,6 @@ class LoginView: UIView {
         self.addSubview(signUpButton)
     }
     
-    @objc func dismissKeyboard (_ sender: UITapGestureRecognizer) {
-        emailField.resignFirstResponder()
-        passwordField.resignFirstResponder()
-    }
-    
     @objc func tappedLogin(){
         if emailField.hasText && passwordField.hasText{
             FirebaseAuthHelper.logIn(email: emailField.text!, password: passwordField.text!, view: viewController, withBlock: { (user) in

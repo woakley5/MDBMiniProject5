@@ -21,8 +21,13 @@ class LoginViewController: UIViewController {
         mainView = LoginView(frame: view.frame, controller: self)
         view.addSubview(mainView)
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(mainView.dismissKeyboard (_:)))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard (_:)))
         self.view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func dismissKeyboard (_ sender: UITapGestureRecognizer) {
+        mainView.emailField.resignFirstResponder()
+        mainView.passwordField.resignFirstResponder()
     }
     
 }
