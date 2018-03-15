@@ -21,6 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
+        Messaging.messaging().delegate = self
+
         LyftConfiguration.developer = (token: "fLCBu1e/+yLZy0B+Sp3T4QOO4R8FS62rgfhoh6g8MiTyMCoz/XJY9hFyptZF3UNde0g0a/GKUjqpUwI+gCX1/fmvcvixuorKbVHbt76N9ILFjYsr1f0juDc=", clientId: "PMk8sLhkuEFT")
         let console = ConsoleDestination()  // log to Xcode Console
         let cloud = SBPlatformDestination(appID: "k6POnR", appSecret: "qoqunmg9kxk6l8lahs7xqenvplujziqw", encryptionKey: "d6pvazpvSEXufaekFxdhevz5yuscrbmy") // to cloud
@@ -28,62 +30,76 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         beaverLog.addDestination(console)
         beaverLog.addDestination(cloud)
         
+        application.registerForRemoteNotifications()
         if #available(iOS 10.0, *) {
-            // For iOS 10 display notification (sent via APNS)
             UNUserNotificationCenter.current().delegate = self
-            
             let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-            UNUserNotificationCenter.current().requestAuthorization(
-                options: authOptions,
-                completionHandler: {_, _ in })
+            UNUserNotificationCenter.current().requestAuthorization(options: authOptions, completionHandler: {_, _ in })
         } else {
-            let settings: UIUserNotificationSettings =
-                UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+            let settings: UIUserNotificationSettings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
             application.registerUserNotificationSettings(settings)
         }
-        
-        application.registerForRemoteNotifications()
+        beaverLog.info("Registered for notifications")
 
         return true
     }
 
-    func applicationWillResignActive(_ application: UIApplication) {
-        // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-        // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
+        // If you are receiving a notification message while your app is in the background,
+        // this callback will not be fired till the user taps on the notification launching the application.
+        // TODO: Handle data of notification
+        
+        // With swizzling disabled you must let Messaging know about the message, for Analytics
+        // Messaging.messaging().appDidReceiveMessage(userInfo)
+        
+        // Print message ID.
+        beaverLog.info("Got a remote notification")
+        
+        // Print full message.
+        print(userInfo)
     }
-
-    func applicationDidEnterBackground(_ application: UIApplication) {
-        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        // If you are receiving a notification message while your app is in the background,
+        // this callback will not be fired till the user taps on the notification launching the application.
+        // TODO: Handle data of notification
+        
+        // With swizzling disabled you must let Messaging know about the message, for Analytics
+        // Messaging.messaging().appDidReceiveMessage(userInfo)
+        
+        // Print message ID
+        beaverLog.info("Got a remote notification with completion handler")
+        // Print full message.
+        print(userInfo)
+        
+        completionHandler(UIBackgroundFetchResult.newData)
     }
-
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
-    }
-
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    }
-
-    func applicationWillTerminate(_ application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    }
-
 
 }
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
+    
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        
         let userInfo = notification.request.content.userInfo
-        beaverLog.info("Recieved notification \(userInfo.description)")
-        //let presentationOptions = RemoteNotificationHandler.handleNotification(userInfo: userInfo as! [String: Any])
-        completionHandler(UNNotificationPresentationOptions())
+        beaverLog.info("Will present a notification   " + userInfo.debugDescription)
+        //TODO: Handle foreground notification
+        completionHandler([.alert])
     }
+    
+    // iOS10+, called when received response (default open, dismiss or custom action) for a notification
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
-        beaverLog.info("Recieved notification \(userInfo.description)")
+        beaverLog.info("Did recieve a notification response   " + userInfo.debugDescription)
+        //TODO: Handle background notification
+        completionHandler()
+    }
+}
 
+extension AppDelegate : MessagingDelegate {
+    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
+        beaverLog.info("[RemoteNotification] didRefreshRegistrationToken: \(fcmToken)")
+        Messaging.messaging().subscribe(toTopic: "testTopic")
     }
 }
 
